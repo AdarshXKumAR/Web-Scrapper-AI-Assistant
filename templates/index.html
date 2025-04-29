@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Web Scraper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            color-scheme: dark;
+            --gradient-start: #10b981; /* emerald-500 */
+            --gradient-end: #3b82f6; /* blue-500 */
+        }
+
+        body {
+            background-color: rgb(22, 22, 22);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: rgb(17, 24, 39);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: rgb(55, 65, 81);
+            border-radius: 9999px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: rgb(75, 85, 99);
+        }
+
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .source-header {
+            background: rgba(55, 65, 81, 0.5);
+            border-left: 3px solid var(--gradient-start);
+            padding: 8px 12px;
+            margin-bottom: 12px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+
+        .custom-button {
+            background: linear-gradient(45deg, var(--gradient-start), var(--gradient-end));
+            transition: all 0.3s ease;
+        }
+        
+        .custom-button:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+        
+        .custom-button:active {
+            transform: translateY(1px);
+            filter: brightness(0.9);
+        }
+
+        /* Markdown content styling */
+        .markdown-content h1 {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 0.5rem;
+        }
+        
+        .markdown-content h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 1.2rem;
+            margin-bottom: 0.8rem;
+        }
+        
+        .markdown-content h3 {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 1rem;
+            margin-bottom: 0.6rem;
+        }
+        
+        .markdown-content h4, .markdown-content h5, .markdown-content h6 {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .markdown-content p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .markdown-content ul, .markdown-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .markdown-content ul li {
+            list-style-type: disc;
+            margin-bottom: 0.5rem;
+        }
+        
+        .markdown-content ol li {
+            list-style-type: decimal;
+            margin-bottom: 0.5rem;
+        }
+        
+        .markdown-content strong, .markdown-content b {
+            font-weight: bold;
+            color: var(--gradient-start);
+        }
+        
+        .markdown-content a {
+            color: var(--gradient-end);
+            text-decoration: underline;
+        }
+        
+        /* Card hover effects */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Glowing effect for buttons */
+        .btn-glow:hover {
+            box-shadow: 0 0 15px var(--gradient-start);
+        }
+        
+        /* Pulse animation for icons */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        /* Gradient text animation */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--gradient-start), var(--gradient-end), var(--gradient-start));
+            background-size: 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientAnimation 3s ease infinite;
+        }
+        
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen text-gray-100 p-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="bg-gray-800 rounded-xl p-8 mb-8 shadow-2xl border border-gray-700 card-hover">
+            <h1 class="text-4xl font-bold text-center mb-8 gradient-text">
+                Web Scraper & LLM Assistant
+            </h1>
+
+            <!-- Model Selection -->
+            <div class="flex justify-center mb-8">
+                <div class="bg-gray-900 p-1 rounded-lg inline-flex gap-2">
+                    <button
+                        id="geminiBtn"
+                        class="flex items-center gap-2 px-4 py-2 rounded-md transition-all bg-emerald-500/20 text-emerald-400"
+                    >
+                        <i data-lucide="sparkles" class="w-[18px] h-[18px]"></i>
+                        Gemini
+                    </button>
+                    <button
+                        id="groqBtn"
+                        class="flex items-center gap-2 px-4 py-2 rounded-md transition-all hover:bg-gray-800"
+                    >
+                        <i data-lucide="zap" class="w-[18px] h-[18px]"></i>
+                        Groq
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="flex mb-6 bg-gray-900 rounded-lg overflow-hidden">
+                <button
+                    id="urlTab"
+                    class="flex-1 p-4 flex items-center justify-center gap-2 transition-all bg-gray-800 border-b-2 border-emerald-500"
+                >
+                    <i data-lucide="link" class="w-[18px] h-[18px]"></i>
+                    URL Scraping
+                </button>
+                <button
+                    id="searchTab"
+                    class="flex-1 p-4 flex items-center justify-center gap-2 transition-all hover:bg-gray-800"
+                >
+                    <i data-lucide="search" class="w-[18px] h-[18px]"></i>
+                    Search & Analyze
+                </button>
+            </div>
+
+            <!-- URL Section -->
+            <div id="urlSection" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">URL to Scrape</label>
+                        <input
+                            type="url"
+                            id="urlInput"
+                            class="w-full p-3 rounded-lg bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                            placeholder="Enter URL"
+                        />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Or Enter Topic</label>
+                        <input
+                            type="text"
+                            id="topicInput"
+                            class="w-full p-3 rounded-lg bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                            placeholder="Enter topic to search"
+                        />
+                    </div>
+                </div>
+                <button
+                    id="analyzeBtn"
+                    class="w-full p-3 rounded-lg bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 font-medium flex items-center justify-center gap-2 transition-all custom-button btn-glow"
+                >
+                    <i data-lucide="activity" class="w-[18px] h-[18px]"></i>
+                    Analyze Content
+                </button>
+            </div>
+
+            <!-- Search Section -->
+            <div id="searchSection" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Search Query</label>
+                    <input
+                        type="text"
+                        id="searchInput"
+                        class="w-full p-3 rounded-lg bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                        placeholder="Enter search query"
+                    />
+                </div>
+                <button
+                    id="searchBtn"
+                    class="w-full p-3 rounded-lg bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 font-medium flex items-center justify-center gap-2 transition-all custom-button btn-glow"
+                >
+                    <i data-lucide="search" class="w-[18px] h-[18px]"></i>
+                    Search & Analyze
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="grid grid-cols-1 md:grid-cols-2 gap-6 hidden">
+            <!-- Analyzed Content -->
+            <div class="bg-gray-800 rounded-xl p-6 shadow-xl border border-gray-700 card-hover">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-2xl font-bold">Analyzed Content</h2>
+                    <span id="modelBadge" class="px-3 py-1 rounded-full text-sm bg-gray-900 border border-gray-700">
+                        <span class="flex items-center gap-2">
+                            <i data-lucide="sparkles" class="w-[14px] h-[14px] text-emerald-400 pulse"></i>
+                            Gemini
+                        </span>
+                    </span>
+                </div>
+                <div id="results" class="prose prose-invert max-w-none markdown-content overflow-auto max-h-96">
+                    <p>Results will appear here after analysis.</p>
+                </div>
+            </div>
+
+            <!-- Chat Section -->
+            <div class="bg-gray-800 rounded-xl p-6 shadow-xl border border-gray-700 card-hover">
+                <h2 class="text-2xl font-bold mb-4">Chat</h2>
+                <div class="h-[400px] flex flex-col">
+                    <div id="chatMessages" class="flex-1 overflow-y-auto space-y-4 mb-4"></div>
+                    <div class="flex gap-2">
+                        <input
+                            type="text"
+                            id="chatInput"
+                            class="flex-1 p-3 rounded-lg bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                            placeholder="Ask a question about the content..."
+                        />
+                        <button
+                            id="askBtn"
+                            class="p-3 rounded-lg bg-emerald-500 hover:bg-emerald-600 transition-all btn-glow"
+                        >
+                            <i data-lucide="send" class="w-[20px] h-[20px]"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        let currentContent = '';
+        let currentModel = 'gemini';
+        let activeTab = 'url';
+        
+        // Model selection setup
+        document.getElementById('geminiBtn').addEventListener('click', function() {
+            setModel('gemini');
+        });
+        
+        document.getElementById('groqBtn').addEventListener('click', function() {
+            setModel('groq');
+        });
+        
+        // Tab switching setup
+        document.getElementById('urlTab').addEventListener('click', function() {
+            setActiveTab('url');
+        });
+        
+        document.getElementById('searchTab').addEventListener('click', function() {
+            setActiveTab('search');
+        });
+        
+        // Button click handlers
+        document.getElementById('analyzeBtn').addEventListener('click', function() {
+            scrapeUrl();
+        });
+        
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            performSearch();
+        });
+        
+        document.getElementById('askBtn').addEventListener('click', function() {
+            askQuestion();
+        });
+        
+        // Enter key handlers
+        document.getElementById('urlInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                scrapeUrl();
+            }
+        });
+        
+        document.getElementById('topicInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                scrapeUrl();
+            }
+        });
+        
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+        
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                askQuestion();
+            }
+        });
+        
+        function setModel(model) {
+            currentModel = model;
+            
+            // Update button styles
+            document.getElementById('geminiBtn').className = `flex items-center gap-2 px-4 py-2 rounded-md transition-all ${
+                model === 'gemini' ? 'bg-emerald-500/20 text-emerald-400' : 'hover:bg-gray-800'
+            }`;
+            document.getElementById('groqBtn').className = `flex items-center gap-2 px-4 py-2 rounded-md transition-all ${
+                model === 'groq' ? 'bg-yellow-500/20 text-yellow-400' : 'hover:bg-gray-800'
+            }`;
+            
+            // Update model badge
+            const modelBadge = document.getElementById('modelBadge');
+            if (model === 'gemini') {
+                modelBadge.innerHTML = `
+                    <span class="flex items-center gap-2">
+                        <i data-lucide="sparkles" class="w-[14px] h-[14px] text-emerald-400 pulse"></i>
+                        Gemini
+                    </span>
+                `;
+            } else {
+                modelBadge.innerHTML = `
+                    <span class="flex items-center gap-2">
+                        <i data-lucide="zap" class="w-[14px] h-[14px] text-yellow-400 pulse"></i>
+                        Groq
+                    </span>
+                `;
+            }
+            lucide.createIcons();
+        }
+        
+        function setActiveTab(tab) {
+            activeTab = tab;
+            
+            // Toggle section visibility
+            document.getElementById('urlSection').classList.toggle('hidden', tab !== 'url');
+            document.getElementById('searchSection').classList.toggle('hidden', tab !== 'search');
+            
+            // Update tab styles
+            document.getElementById('urlTab').className = `flex-1 p-4 flex items-center justify-center gap-2 transition-all ${
+                tab === 'url' ? 'bg-gray-800 border-b-2 border-emerald-500' : 'hover:bg-gray-800'
+            }`;
+            document.getElementById('searchTab').className = `flex-1 p-4 flex items-center justify-center gap-2 transition-all ${
+                tab === 'search' ? 'bg-gray-800 border-b-2 border-emerald-500' : 'hover:bg-gray-800'
+            }`;
+        }
+        
+        function setLoading(button, isLoading) {
+            if (isLoading) {
+                if (button.id === 'analyzeBtn') {
+                    button.innerHTML = `<i data-lucide="loader-2" class="w-[20px] h-[20px] animate-spin"></i> Scraping...`;
+                } else if (button.id === 'searchBtn') {
+                    button.innerHTML = `<i data-lucide="loader-2" class="w-[20px] h-[20px] animate-spin"></i> Searching...`;
+                }
+                button.disabled = true;
+            } else {
+                if (button.id === 'analyzeBtn') {
+                    button.innerHTML = `<i data-lucide="activity" class="w-[18px] h-[18px]"></i> Analyze Content`;
+                } else if (button.id === 'searchBtn') {
+                    button.innerHTML = `<i data-lucide="search" class="w-[18px] h-[18px]"></i> Search & Analyze`;
+                }
+                button.disabled = false;
+            }
+            lucide.createIcons();
+        }
+        
+        async function scrapeUrl() {
+            const url = document.getElementById('urlInput').value;
+            const topic = document.getElementById('topicInput').value;
+            
+            if (!url && !topic) {
+                alert("Please enter either a URL or a topic");
+                return;
+            }
+            
+            const button = document.getElementById('analyzeBtn');
+            setLoading(button, true);
+            
+            try {
+                // Show the results section
+                document.getElementById('resultsSection').classList.remove('hidden');
+                
+                // Simulate API call with timeout
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Replace with actual fetch in a real implementation
+                const response = await fetch('/scrape', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url, topic, model: currentModel })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    document.getElementById('results').innerHTML = `<div class="text-red-400">${data.error}</div>`;
+                } else {
+                    currentContent = data.raw_content;
+                    
+                    // Add source website header if available
+                    let resultContent = '';
+                    if (data.raw_content.site_name && data.raw_content.domain) {
+                        resultContent = `<div class="bg-gray-900 p-2 mb-4 rounded flex items-center border border-gray-700">
+                            <span class="text-sm font-bold mr-2">Source:</span>
+                            <span class="text-emerald-400 font-bold">${data.raw_content.site_name}</span>
+                            <span class="text-gray-400 text-xs ml-2">(${data.raw_content.domain})</span>
+                        </div>`;
+                    }
+                    
+                    resultContent += data.summary;
+                    document.getElementById('results').innerHTML = resultContent;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('results').innerHTML = `<div class="text-red-400">An error occurred: ${error.message}</div>`;
+            } finally {
+                setLoading(button, false);
+            }
+        }
+        
+        async function performSearch() {
+            const query = document.getElementById('searchInput').value;
+            
+            if (!query) {
+                alert("Please enter a search query");
+                return;
+            }
+            
+            const button = document.getElementById('searchBtn');
+            setLoading(button, true);
+            
+            try {
+                // Show the results section
+                document.getElementById('resultsSection').classList.remove('hidden');
+                
+                // Simulate API call with timeout
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Replace with actual fetch in a real implementation
+                const response = await fetch('/search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query, model: currentModel })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    document.getElementById('results').innerHTML = `<div class="text-red-400">${data.error}</div>`;
+                } else {
+                    currentContent = data.raw_content;
+                    
+                    // Add source website header if available
+                    let resultContent = '';
+                    if (data.raw_content.site_name && data.raw_content.domain) {
+                        resultContent = `<div class="bg-gray-900 p-2 mb-4 rounded flex items-center border border-gray-700">
+                            <span class="text-sm font-bold mr-2">Source:</span>
+                            <span class="text-emerald-400 font-bold">${data.raw_content.site_name}</span>
+                            <span class="text-gray-400 text-xs ml-2">(${data.raw_content.domain})</span>
+                        </div>`;
+                    }
+                    
+                    resultContent += data.summary;
+                    document.getElementById('results').innerHTML = resultContent;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('results').innerHTML = `<div class="text-red-400">An error occurred: ${error.message}</div>`;
+            } finally {
+                setLoading(button, false);
+            }
+        }
+        
+        async function askQuestion() {
+            const question = document.getElementById('chatInput').value;
+            
+            if (!question || !currentContent) {
+                if (!currentContent) {
+                    alert("Please analyze some content before asking questions");
+                }
+                return;
+            }
+            
+            const chatMessages = document.getElementById('chatMessages');
+            
+            // Add user message
+            chatMessages.innerHTML += `
+                <div class="p-4 rounded-lg bg-gray-700 ml-8">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="font-medium">You</span>
+                    </div>
+                    ${question}
+                </div>
+            `;
+            
+            // Clear input
+            document.getElementById('chatInput').value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Add loading message
+            const loadingMsgId = 'loading-msg-' + Date.now();
+            chatMessages.innerHTML += `
+                <div id="${loadingMsgId}" class="p-4 rounded-lg bg-gray-900 mr-8 border border-gray-700">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="font-medium flex items-center gap-2">
+                            <i data-lucide="${currentModel === 'gemini' ? 'sparkles' : 'zap'}" 
+                               class="${currentModel === 'gemini' ? 'text-emerald-400' : 'text-yellow-400'} w-[16px] h-[16px]"></i>
+                            ${currentModel === 'gemini' ? 'Gemini' : 'Groq'}
+                        </span>
+                    </div>
+                    <div class="flex items-center">
+                        <i data-lucide="loader-2" class="w-[16px] h-[16px] animate-spin mr-2"></i> Thinking...
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            try {
+                // Simulate API call with timeout
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Replace with actual fetch in a real implementation
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        question,
+                        context: JSON.stringify(currentContent),
+                        model: currentModel
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Remove loading message
+                document.getElementById(loadingMsgId).remove();
+                
+                // Add response message
+                chatMessages.innerHTML += `
+                    <div class="p-4 rounded-lg bg-gray-900 mr-8 border border-gray-700">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="font-medium flex items-center gap-2">
+                                <i data-lucide="${currentModel === 'gemini' ? 'sparkles' : 'zap'}" 
+                                   class="${currentModel === 'gemini' ? 'text-emerald-400' : 'text-yellow-400'} w-[16px] h-[16px]"></i>
+                                ${currentModel === 'gemini' ? 'Gemini' : 'Groq'}
+                            </span>
+                        </div>
+                        <div>${data.answer || "This is a sample response. In a real implementation, this would be the AI model's response."}</div>
+                    </div>
+                `;
+                lucide.createIcons();
+            } catch (error) {
+                console.error('Error:', error);
+                
+                // Remove loading message
+                document.getElementById(loadingMsgId).remove();
+                
+                // Add error message
+                chatMessages.innerHTML += `
+                    <div class="p-4 rounded-lg bg-gray-900 mr-8 border border-gray-700">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="font-medium flex items-center gap-2">
+                                <i data-lucide="${currentModel === 'gemini' ? 'sparkles' : 'zap'}" 
+                                   class="${currentModel === 'gemini' ? 'text-emerald-400' : 'text-yellow-400'} w-[16px] h-[16px]"></i>
+                                ${currentModel === 'gemini' ? 'Gemini' : 'Groq'}
+                            </span>
+                        </div>
+                        <div class="text-red-400">Sorry, an error occurred. Please try again.</div>
+                    </div>
+                `;
+                lucide.createIcons();
+            }
+            
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    </script>
+</body>
+</html>

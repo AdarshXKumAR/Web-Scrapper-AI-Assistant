@@ -131,4 +131,4 @@ MIT License
 
 ---
 
-`Created with ❤️ by` `AdarshXKumAR`
+`Created with ❤️ by AdarshXKumAR`

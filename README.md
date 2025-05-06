@@ -2,7 +2,7 @@
 
 A powerful web scraping and content analysis tool that leverages AI models to extract, summarize, and interact with web content. Built with Flask backend and a modern, responsive frontend designed with Tailwind CSS.
 
-![Web Scraper Interface](https://github.com/AdarshXKumAR/Web-Scrapper-AI-Assistant/blob/main/demo1.png)
+![Web Scraper Interface](main/demo1.png)
 
 ## Features
 

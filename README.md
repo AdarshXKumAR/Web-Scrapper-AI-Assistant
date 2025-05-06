@@ -36,8 +36,8 @@ A powerful web scraping and content analysis tool that leverages AI models to ex
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/web-scrape-ai-assistant.git
-   cd web-scrape-ai-assistant
+   git clone https://github.com/AdarshXKumAR/Web-Scrapper-AI-Assistant.git
+   cd Web-Scrapper-AI-Assistant
    ```
 
 2. Create a virtual environment and activate it:

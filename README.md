@@ -14,7 +14,7 @@ A powerful web scraping and content analysis tool that leverages AI models to ex
 - **Beautiful UI**: Modern, responsive design with Tailwind CSS and custom animations
 - **Robust Error Handling**: Fallback mechanisms and comprehensive error management
 
-![Chat Interface](https://github.com/AdarshXKumAR/Web-Scrapper-AI-Assistant/blob/main/demo2.png)
+![Chat Interface](main/demo2.png)
 
 ## Technical Stack
 

@@ -1,10 +1,10 @@
-# Web Scrape AI Assistant
+# 🕸️ Web Scrape AI Assistant
 
 A powerful web scraping and content analysis tool that leverages AI models to extract, summarize, and interact with web content. Built with Flask backend and a modern, responsive frontend designed with Tailwind CSS.
 
 ![Web Scraper Interface](https://github.com/AdarshXKumAR/Web-Scrapper-AI-Assistant/blob/main/demo1.png)
 
-## Features
+## ✨ Features
 
 - **Dual AI Model Support**: Choose between Gemini and Groq LLMs for content processing
 - **URL Scraping**: Direct scraping of any website URL with intelligent content extraction
@@ -16,7 +16,7 @@ A powerful web scraping and content analysis tool that leverages AI models to ex
 
 ![Chat Interface](https://github.com/AdarshXKumAR/Web-Scrapper-AI-Assistant/blob/main/demo2.png)
 
-## Technical Stack
+## 🛠️ Technical Stack
 
 - **Backend**: Flask (Python)
 - **Frontend**: HTML, JavaScript, Tailwind CSS
@@ -26,7 +26,7 @@ A powerful web scraping and content analysis tool that leverages AI models to ex
 - **Web Scraping**: BeautifulSoup4, Requests
 - **Additional Tools**: dotenv for environment management
 
-## Setup Instructions
+## 🚀 Setup Instructions
 
 ### Prerequisites
 - Python 3.7 or higher
@@ -69,7 +69,7 @@ A powerful web scraping and content analysis tool that leverages AI models to ex
    http://127.0.0.1:5000
    ```
 
-## Usage Guide
+## 🪴 Usage Guide
 
 1. **Select AI Model**: Choose between Gemini or Groq using the toggle buttons
 2. **URL Scraping**:
@@ -85,7 +85,7 @@ A powerful web scraping and content analysis tool that leverages AI models to ex
    - Ask questions about the content
    - Receive AI-powered responses
 
-## Project Structure
+## 📚 Project Structure
 
 ```
 web-scrape-ai-assistant/
@@ -97,20 +97,20 @@ web-scrape-ai-assistant/
 └── screenshots/           # Application screenshots
 ```
 
-## API Features
+## 🔗 API Features
 
 - `/scrape` - Endpoint for scraping URLs and topics
 - `/search` - Search for content and analyze it
 - `/chat` - Ask questions about analyzed content
 - `/check-models` - Check available AI models
 
-## Limitations
+## ⚡ Limitations
 
 - Web scraping may be blocked by some websites with anti-scraping measures
 - Search functionality depends on public search engines and may be limited
 - Large webpages may be truncated due to token limits of AI models
 
-## Future Improvements
+## 🔮 Future Improvements
 
 - Add support for additional AI models
 - Implement content caching for faster responses
@@ -118,11 +118,11 @@ web-scrape-ai-assistant/
 - Implement user authentication and saved content history
 - Add export functionality for summaries
 
-## License
+## 📝 License
 
 MIT License
 
-## Acknowledgements
+## 🙏 Acknowledgements
 
 - [Google Generative AI](https://ai.google.dev/) for Gemini API
 - [Groq](https://groq.com/) for their high-performance Mixtral model
